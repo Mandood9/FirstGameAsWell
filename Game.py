@@ -21,13 +21,14 @@ class mainChar():
         self.y = y
         self.width = width
         self.height = height
+        self.vel = 10
         self.standing = True
-        self.vel = 15
         self.right = False
         self.left = False
         self.jump = False
         self.standingCount = 0
         self.walkCount = 0
+        self.jumpFrame = 0
         self.jumpCount = 8
 
     def drawMC(self):
