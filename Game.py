@@ -23,6 +23,8 @@ class mainChar():
         self.height = height * 3
         self.vel = 10
         self.standing = True
+        self.facingRight = True
+        self.facingLeft = False
         self.right = False
         self.left = False
         self.jump = False
@@ -40,18 +42,36 @@ class mainChar():
             self.jumpFrame = 0
 
         if self.right:
-            window.blit(pygame.transform.scale(walkRight[self.walkCount//6], (self.width, self.height)), (mc.x, mc.y))
+            if self.jump:
+                scaled = pygame.transform.scale(jumping[self.jumpFrame//9], (self.width, self.height))
+                window.blit(scaled, (self.x, self.y))
+                self.jumpFrame += 4
+            else:
+                window.blit(pygame.transform.scale(walkRight[self.walkCount//6], (self.width, self.height)), (mc.x, mc.y))
             self.walkCount += 3
+
         elif self.left:
-            window.blit(pygame.transform.scale(pygame.transform.flip(walkRight[self.walkCount//6], True, False), (self.width, self.height)), (mc.x, mc.y))
+            if self.jump:
+                window.blit(pygame.transform.scale(pygame.transform.flip(jumping[self.jumpFrame//9], True, False), (self.width, self.height)), (mc.x, mc.y))
+                self.jumpFrame += 4
+            else:
+                window.blit(pygame.transform.scale(pygame.transform.flip(walkRight[self.walkCount//6], True, False), (self.width, self.height)), (mc.x, mc.y))
             self.walkCount += 3
+
         elif self.jump:
-            scaled = pygame.transform.scale(jumping[self.jumpFrame//9], (self.width, self.height))
-            window.blit(scaled, (self.x, self.y))
+            if self.facingRight:
+                scaled = pygame.transform.scale(jumping[self.jumpFrame//9], (self.width, self.height))
+                window.blit(scaled, (self.x, self.y))
+            if self.facingLeft:
+                window.blit(pygame.transform.scale(pygame.transform.flip(jumping[self.jumpFrame//9], True, False), (self.width, self.height)), (mc.x, mc.y))
             self.jumpFrame += 4
+
         else:
-            scaled = pygame.transform.scale(idle[self.standingCount//9], (self.width, self.height))
-            window.blit(scaled, (self.x, self.y))
+            if self.facingRight:
+                scaled = pygame.transform.scale(idle[self.standingCount//9], (self.width, self.height))
+                window.blit(scaled, (self.x, self.y))
+            if self.facingLeft:
+                window.blit(pygame.transform.scale(pygame.transform.flip(idle[self.standingCount//9], True, False), (self.width, self.height)), (mc.x, mc.y))
             self.standingCount += 4
 
     def controls(self):
@@ -59,11 +79,15 @@ class mainChar():
 
         if keys[pygame.K_RIGHT] and self.x < 800 - self.width - self.vel:
             self.right = True
+            self.facingRight = True
             self.left = False
+            self.facingLeft = False
             self.x += self.vel
         elif keys[pygame.K_LEFT] and self.x > self.vel:
             self.right = False
+            self.facingRight = False
             self.left = True
+            self.facingLeft = True
             self.x -= self.vel
         else:
             self.right = False
