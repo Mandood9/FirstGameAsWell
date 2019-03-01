@@ -19,8 +19,8 @@ class mainChar():
     def __init__(self, x, y, width, height):
         self.x = x
         self.y = y
-        self.width = width
-        self.height = height
+        self.width = width * 3
+        self.height = height * 3
         self.vel = 10
         self.standing = True
         self.right = False
@@ -36,15 +36,21 @@ class mainChar():
             self.walkCount = 0
         if self.standingCount + 1 >= 36:
             self.standingCount = 0
+        if self.jumpFrame + 1 >= 36:
+            self.jumpFrame = 0
 
         if self.right:
-            window.blit(pygame.transform.scale(walkRight[self.walkCount//6], (self.width * 3, self.height * 3)), (mc.x, mc.y))
-            self.walkCount += 6
+            window.blit(pygame.transform.scale(walkRight[self.walkCount//6], (self.width, self.height)), (mc.x, mc.y))
+            self.walkCount += 3
         elif self.left:
-            window.blit(pygame.transform.scale(pygame.transform.flip(walkRight[self.walkCount//6], True, False), (self.width * 3, self.height * 3)), (mc.x, mc.y))
-            self.walkCount += 6
+            window.blit(pygame.transform.scale(pygame.transform.flip(walkRight[self.walkCount//6], True, False), (self.width, self.height)), (mc.x, mc.y))
+            self.walkCount += 3
+        elif self.jump:
+            scaled = pygame.transform.scale(jumping[self.jumpFrame//9], (self.width, self.height))
+            window.blit(scaled, (self.x, self.y))
+            self.jumpFrame += 4
         else:
-            scaled = pygame.transform.scale(idle[self.standingCount//9], (self.width * 3, self.height * 3))
+            scaled = pygame.transform.scale(idle[self.standingCount//9], (self.width, self.height))
             window.blit(scaled, (self.x, self.y))
             self.standingCount += 4
 
