@@ -83,7 +83,7 @@ class character():
         if not(self.attack1) and not(self.airAttack):
             if keys[pygame.K_1]:
                 self.attack1 = True
-        if not(self.attack2):
+        if not(self.attack2) and not(self.airAttack):
             if keys[pygame.K_2]:
                 self.attack2 = True
 
