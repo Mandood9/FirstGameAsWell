@@ -80,10 +80,10 @@ class character():
         # if not(self.airAttack):
         #     if keys[pygame.K_1]:
         #         self.airAttack = True
-        if not(self.attack1) and not(self.airAttack):
+        if not(self.attack1) and not(self.jump):
             if keys[pygame.K_1]:
                 self.attack1 = True
-        if not(self.attack2) and not(self.airAttack):
+        if not(self.attack2) and not(self.jump):
             if keys[pygame.K_2]:
                 self.attack2 = True
 
@@ -114,10 +114,10 @@ class character():
         elif self.attack2:
             if self.switch:
                 window.win.blit(pygame.transform.scale(attack2[self.attack2Count//6], (self.width, self.height)), (self.x, self.y))
-                self.attack2Count += 1
+                self.attack2Count += 2
             else:
                 window.win.blit(pygame.transform.scale(pygame.transform.flip(attack2[self.attack2Count//6], True, False), (self.width, self.height)), (self.x, self.y))
-                self.attack2Count += 1
+                self.attack2Count += 2
         elif self.right:
             if self.jump:
                 if self.airAttack:
