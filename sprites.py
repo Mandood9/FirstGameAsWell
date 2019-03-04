@@ -292,7 +292,7 @@ class slime(mob):
         self.vel = 2
         self.sightRange = 300
         self.attackRange = 85
-        self.health = 2
+        self.health = 1
         self.attackDamage = 2
 
     def slimeOptions(self, player):
@@ -302,7 +302,6 @@ class slime(mob):
         if self.hitCount + 1 >= 36:
             self.hitCount = 0
             self.tookDamage = False
-            hit = False
         if self.dieCount + 1 >= 36:
             self.dieCount = 0
             self.alive = False
@@ -316,24 +315,25 @@ class slime(mob):
 
         if not(self.alive):
             pass
+        elif self.health <= 0:
+            if not(self.switch):
+                window.win.blit(pygame.transform.scale(image.slimeDie[self.dieCount//9], (self.width, self.height)), (self.x, self.y))
+                self.dieCount += 3
+            else:
+                window.win.blit(pygame.transform.scale(pygame.transform.flip(image.slimeDie[self.dieCount//9], True, False), (self.width, self.height)), (self.x, self.y))
+                self.dieCount += 3
         elif hit:
+            self.attackCount = 0
+            self.moveCount = 0
             if not(self.tookDamage):
                 self.health -= damage
                 self.tookDamage = True
-            if self.health <= 0:
-                if not(self.switch):
-                    window.win.blit(pygame.transform.scale(image.slimeDie[self.dieCount//9], (self.width, self.height)), (self.x, self.y))
-                    self.dieCount += 3
-                else:
-                    window.win.blit(pygame.transform.scale(pygame.transform.flip(image.slimeDie[self.dieCount//9], True, False), (self.width, self.height)), (self.x, self.y))
-                    self.dieCount += 3
+            if not(self.switch):
+                window.win.blit(pygame.transform.scale(image.slimeHurt[self.hitCount//9], (self.width, self.height)), (self.x, self.y))
+                self.hitCount += 3
             else:
-                if self.switch:
-                    window.win.blit(pygame.transform.scale(image.slimeHurt[self.hitCount//9], (self.width, self.height)), (self.x, self.y))
-                    self.hitCount += 3
-                else:
-                    window.win.blit(pygame.transform.scale(pygame.transform.flip(image.slimeHurt[self.hitCount//9], True, False), (self.width, self.height)), (self.x, self.y))
-                    self.hitCount += 3
+                window.win.blit(pygame.transform.scale(pygame.transform.flip(image.slimeHurt[self.hitCount//9], True, False), (self.width, self.height)), (self.x, self.y))
+                self.hitCount += 3
         elif self.detected:
             if self.left:
                 if self.attack:

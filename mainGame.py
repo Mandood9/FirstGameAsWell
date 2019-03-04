@@ -18,7 +18,7 @@ def mcAttacks(mc):
     elif mc.attack2Count >= 24 and mc.attack2Count <= 30:
         return True
     else:
-        return False, 0
+        return False
 
 def slimeAttacks(slime):
     if slime.attackCount >= 9 and slime.attackCount <= 18:
