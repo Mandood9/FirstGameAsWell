@@ -27,7 +27,7 @@ def slimeAttacks(slime):
         return False
 
 def hit(attacker, victim):
-    if ((attacker.x >= victim.x and attacker.x <= victim.x + victim.width) or (attacker.x + attacker.width <= victim.x + victim.width and attacker.x + attacker.width >= victim.x)) and (attacker.y + attacker.height/2 >= victim.y and attacker.y + attacker.height/2 <= victim.y + victim.height):
+    if ((attacker.x - victim.x >= 0 and attacker.x - victim.x - victim.width <= 0) or (attacker.x + attacker.width - victim.x - victim.width <= 0 and attacker.x + attacker.width - victim.x >= 0) or (attacker.x + attacker.width/2 - victim.x >= 0 and attacker.x - attacker.width/2 - victim.x - victim.width <= 0)) and (attacker.y + attacker.height/2 >= victim.y and attacker.y + attacker.height/2 <= victim.y + victim.height):
         if attacker.attack1:
             return True #, 1
         if attacker.attack2:
@@ -54,7 +54,10 @@ while game == True:
     # else:
     #     mc.drawCharacter(False, 0)
     if mcAttacks(mc):
-        slime.drawSlime(hit(mc, slime), 1)
+        if mc.attack1:
+            slime.drawSlime(hit(mc, slime), 1)
+        if mc.attack2:
+            slime.drawSlime(hit(mc, slime), 2)
     else:
         slime.drawSlime(False, 0)
     pygame.display.update()
