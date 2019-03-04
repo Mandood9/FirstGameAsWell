@@ -37,7 +37,7 @@ def hit(attacker, victim):
         # if attacker.attack:
         #     return True #, 1
     else:
-        return False, 0
+        return False
 
 game = True
 while game == True:

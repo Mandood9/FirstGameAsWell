@@ -208,6 +208,7 @@ class mob():
         # self.health = health
 
         self.alive = True
+        self.hit = False
         self.tookDamage = False
         self.detected = False
         self.left = True
@@ -222,7 +223,7 @@ class mob():
         self.attackCount = 0
 
     def mobOptions(self, player):
-        if abs(self.x - player.x) <= self.sightRange or self.detected:
+        if (abs(self.x - player.x) <= self.sightRange or self.detected) and not(self.hit):
             self.detected = True
 
             if self.x - player.x > 0:
@@ -248,43 +249,6 @@ class mob():
                     self.attackCount = 0
                     self.x += self.vel
 
-    def drawMob(self, idle, move, attack, hurt, die):
-        if self.idleCount + 1 >= 36:
-            self.idleCount = 0
-        if self.moveCount + 1 >= 36:
-            self.moveCount = 0
-        if self.attackCount + 1 >= 36:
-            self.attack = False
-            self.attackCount = 0
-
-        if self.detected:
-            if self.left:
-                if self.attack:
-                    #draw left attack animation
-                    window.win.blit(pygame.transform.scale(attack[self.attackCount//9], (self.width, self.height)), (self.x, self.y))
-                    self.attackCount += 3
-                else:
-                    #draw left move animation
-                    window.win.blit(pygame.transform.scale(move[self.moveCount//9], (self.width, self.height)), (self.x, self.y))
-                    self.moveCount += 1
-            else:
-                if self.attack:
-                    #draw right attack animation
-                    window.win.blit(pygame.transform.scale(pygame.transform.flip(attack[self.attackCount//9], True, False), (self.width, self.height)), (self.x, self.y))
-                    self.attackCount += 3
-                else:
-                    pass
-                    #draw right move animation
-                    window.win.blit(pygame.transform.scale(pygame.transform.flip(move[self.moveCount//9], True, False), (self.width, self.height)), (self.x, self.y))
-                    self.moveCount += 1
-        else:
-            #draw idle animation
-            if self.dir == 0:
-                window.win.blit(pygame.transform.scale(idle[self.idleCount//9], (self.width, self.height)), (self.x, self.y))
-            else:
-                window.win.blit(pygame.transform.scale(pygame.transform.flip(idle[self.idleCount//9], True, False), (self.width, self.height)), (self.x, self.y))
-            self.idleCount += 1
-
 class slime(mob):
     def __init__(self, x, y, width, height):
         super().__init__(x, y, width, height)
@@ -292,7 +256,7 @@ class slime(mob):
         self.vel = 2
         self.sightRange = 300
         self.attackRange = 85
-        self.health = 1
+        self.health = 2
         self.attackDamage = 2
 
     def slimeOptions(self, player):
@@ -301,6 +265,7 @@ class slime(mob):
     def drawSlime(self, hit, damage): # slimeIdle, slimeMove, slimeAttack, slimeHurt, slimeDie):
         if self.hitCount + 1 >= 36:
             self.hitCount = 0
+            self.hit = False
             self.tookDamage = False
         if self.dieCount + 1 >= 36:
             self.dieCount = 0
@@ -313,6 +278,8 @@ class slime(mob):
             self.attack = False
             self.attackCount = 0
 
+        if hit:
+            self.hit = True
         if not(self.alive):
             pass
         elif self.health <= 0:
@@ -322,7 +289,8 @@ class slime(mob):
             else:
                 window.win.blit(pygame.transform.scale(pygame.transform.flip(image.slimeDie[self.dieCount//9], True, False), (self.width, self.height)), (self.x, self.y))
                 self.dieCount += 3
-        elif hit:
+        elif self.hit:
+            self.left = False
             self.attackCount = 0
             self.moveCount = 0
             if not(self.tookDamage):
