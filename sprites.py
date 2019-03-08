@@ -3,6 +3,8 @@ import window
 import image
 import random
 
+pygame.init()
+
 # class collision():
 #     def __init__(self, object1x, object1y, object1Width, object1Height, object2x, object2y, object2Width, object2Height):
 #         self.object1x = object1x
@@ -31,7 +33,7 @@ class character():
         self.height = height * 3
         self.vel = 8
         self.health = 5
-        self.jumpHeight = 7
+        self.jumpHeight = 8
         self.attack1Damage = 1
         self.attack2Damage = 2
 
@@ -61,11 +63,16 @@ class character():
             self.right = True
             self.left = False
             self.switch = True
-            self.x += self.vel
+            if self.x < 400 - self.width - self.vel:
+                self.vel = 8
+                self.x += self.vel
+            else:
+                self.vel = 0
         elif keys[pygame.K_LEFT] and self.x > self.vel and not(self.attack1) and not(self.attack2) and not(self.hit):
             self.right = False
             self.left = True
             self.switch = False
+            self.vel = 8
             self.x -= self.vel
         else:
             self.right = False
@@ -74,20 +81,20 @@ class character():
             self.jumpCount = 0
 
         if not(self.jump):
-            if keys[pygame.K_SPACE] and not(self.attack1) and not(self.attack2):
+            if keys[pygame.K_SPACE] and not(self.attack1) and not(self.attack2) and not(self.hit):
                 self.jump = True
         else:
             if not(self.airAttack):
                 if keys[pygame.K_1]:
                     self.airAttack = True
-            if self.jumpHeight >= -7:
+            if self.jumpHeight >= -8:
                 neg = 1
                 if self.jumpHeight < 0:
                     neg = -1
                 self.y -= (self.jumpHeight ** 2) * 0.5 * neg
                 self.jumpHeight -= 1
             else:
-                self.jumpHeight = 7
+                self.jumpHeight = 8
                 self.airAttackCount = 0
                 self.jump = False
                 self.airAttack = False
@@ -102,6 +109,8 @@ class character():
     def drawCharacter(self):
         if self.hitCount + 1 >= 36:
             self.hitCount = 0
+            self.attack1Count = 0
+            self.attack2Count = 0
             self.hit = False
         if self.dieCount + 1 >= 36:
             self.dieCount = 0
@@ -197,6 +206,15 @@ class character():
             else:
                 window.win.blit(pygame.transform.scale(pygame.transform.flip(image.idle[self.standingCount//9], True, False), (self.width, self.height)), (self.x, self.y))
                 self.standingCount += 3
+
+    def drawHearts(self):
+        pos = 0
+        for num in range(self.health):
+            window.win.blit(pygame.transform.scale(image.hearts[0], (35, 35)), (pos, 0))
+            pos += 35
+        for num in range(5 - self.health):
+            window.win.blit(pygame.transform.scale(image.hearts[1], (35, 35)), (pos, 0))
+            pos += 35
 
     def characterAttackAnim(self, enemies, type):
         if self.attack1Count >= 12 and self.attack1Count <= 14:
@@ -341,8 +359,9 @@ class slime(mob):
 
     def slimeAttackAnim(self, mc):
         if self.attackCount >= 12 and self.attackCount <= 14 and not(mc.hit):
-            if ((self.x - mc.x >= 0 and self.x - mc.x - mc.width <= 0) or (self.x + self.width - mc.x - mc.width <= 0 and self.x + self.width - mc.x >= 0)) and not(mc.hit):
+            if ((self.x - mc.x >= 0 and self.x - mc.x - mc.width <= 0) or (self.x + self.width - mc.x - mc.width <= 0 and self.x + self.width - mc.x >= 0)) and (self.y + self.height/2 >= mc.y and self.y + self.height/2 <= mc.y + mc.height) and not(mc.hit):
                 mc.health -= self.attackDamage
                 mc.hit = True
+
 class skeleton(mob):
     pass

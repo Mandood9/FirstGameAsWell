@@ -9,6 +9,7 @@ pygame.display.set_caption("First Game As Well")
 clock = pygame.time.Clock()
 
 mc = sprites.character(0, 425, 50, 37)
+background = window.background()
 slime = sprites.slime(500, 461, 32, 25)
 
 enemies = {
@@ -27,8 +28,9 @@ while game == True:
 
     mc.characterOptions()
     slime.slimeOptions(mc)
-    window.redrawGameWindow()
+    background.drawBackground(mc)
     mc.drawCharacter()
+    mc.drawHearts()
     slime.drawSlime()
     mc.characterAttackAnim(enemies, "slime")
     slime.slimeAttackAnim(mc)
