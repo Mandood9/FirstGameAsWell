@@ -29,8 +29,8 @@ class character():
     def __init__(self, x, y, width, height):
         self.x = x
         self.y = y
-        self.width = width * 3
-        self.height = height * 3
+        self.width = width * 2
+        self.height = height * 2
         self.vel = 8
         self.health = 5
         self.jumpHeight = 8
@@ -59,11 +59,11 @@ class character():
     def characterOptions(self):
         keys = pygame.key.get_pressed()
 
-        if keys[pygame.K_RIGHT] and self.x < 800 - self.width - self.vel and not(self.attack1) and not(self.attack2) and not(self.hit):
+        if keys[pygame.K_RIGHT] and not(self.attack1) and not(self.attack2) and not(self.hit):
             self.right = True
             self.left = False
             self.switch = True
-            if self.x < 400 - self.width - self.vel:
+            if self.x < 512 - self.width - self.vel:
                 self.vel = 8
                 self.x += self.vel
             else:
@@ -208,13 +208,13 @@ class character():
                 self.standingCount += 3
 
     def drawHearts(self):
-        pos = 0
+        pos = 10
         for num in range(self.health):
-            window.win.blit(pygame.transform.scale(image.hearts[0], (35, 35)), (pos, 0))
-            pos += 35
+            window.win.blit(pygame.transform.scale(image.hearts[0], (25, 25)), (pos, 10))
+            pos += 30
         for num in range(5 - self.health):
-            window.win.blit(pygame.transform.scale(image.hearts[1], (35, 35)), (pos, 0))
-            pos += 35
+            window.win.blit(pygame.transform.scale(image.hearts[1], (25, 25)), (pos, 10))
+            pos += 30
 
     def characterAttackAnim(self, enemies, type):
         if self.attack1Count >= 12 and self.attack1Count <= 14:
@@ -231,12 +231,13 @@ class character():
                     enemy.hit = True
                     enemy.hitCount = 0
                     break
+
 class mob():
     def __init__(self, x, y, width, height): # vel, sightRange, attackRange, health):
         self.x = x
         self.y = y
-        self.width = width * 3
-        self.height = height * 3
+        self.width = width * 2
+        self.height = height * 2
         # self.vel = vel
         # self.sightRange = sightRange
         # self.attackRange = attackRange
@@ -307,7 +308,7 @@ class slime(mob):
             self.idleCount = 0
         if self.moveCount + 1 >= 36:
             self.moveCount = 0
-        if self.attackCount + 1 >= 36:
+        if self.attackCount + 1 >= 72:
             self.attack = False
             self.attackCount = 0
 
@@ -333,11 +334,11 @@ class slime(mob):
             if self.left:
                 if self.attack:
                     #draw left attack animation
-                    window.win.blit(pygame.transform.scale(image.slimeAttack[self.attackCount//9], (self.width, self.height)), (self.x, self.y))
+                    window.win.blit(pygame.transform.scale(image.slimeAttack[self.attackCount//18], (self.width, self.height)), (self.x, self.y))
                     self.attackCount += 1
                 else:
                     #draw left move animation
-                    window.win.blit(pygame.transform.scale(image.slimeMove[self.moveCount//9], (self.width, self.height)), (self.x, self.y))
+                    window.win.blit(pygame.transform.scale(image.slimeMove[self.moveCount//18], (self.width, self.height)), (self.x, self.y))
                     self.moveCount += 1
             else:
                 if self.attack:
@@ -358,7 +359,7 @@ class slime(mob):
             self.idleCount += 1
 
     def slimeAttackAnim(self, mc):
-        if self.attackCount >= 12 and self.attackCount <= 14 and not(mc.hit):
+        if self.attackCount >= 24 and self.attackCount <= 28 and not(mc.hit):
             if ((self.x - mc.x >= 0 and self.x - mc.x - mc.width <= 0) or (self.x + self.width - mc.x - mc.width <= 0 and self.x + self.width - mc.x >= 0)) and (self.y + self.height/2 >= mc.y and self.y + self.height/2 <= mc.y + mc.height) and not(mc.hit):
                 mc.health -= self.attackDamage
                 mc.hit = True

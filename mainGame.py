@@ -2,15 +2,19 @@ import pygame
 import image
 import window
 import sprites
+import pytmx
 
 pygame.init()
 
+win = pygame.display.set_mode((1024, 768))
 pygame.display.set_caption("First Game As Well")
 clock = pygame.time.Clock()
 
-mc = sprites.character(0, 425, 50, 37)
+map = pytmx.load_pygame('MagicCliffsMap1.tmx')
+
+mc = sprites.character(0, 534, 50, 37)
 background = window.background()
-slime = sprites.slime(500, 461, 32, 25)
+slime = sprites.slime(500, 558, 32, 25)
 
 enemies = {
     "slime": [],
@@ -29,6 +33,12 @@ while game == True:
     mc.characterOptions()
     slime.slimeOptions(mc)
     background.drawBackground(mc)
+    for layer in map:
+        for x, y, gid in layer:
+            tile = map.get_tile_image_by_gid(gid)
+            if tile:
+                win.blit(tile, (x * map.tilewidth, y * map.tileheight))
+
     mc.drawCharacter()
     mc.drawHearts()
     slime.drawSlime()
