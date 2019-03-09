@@ -343,8 +343,8 @@ class slime(mob):
             else:
                 if self.attack:
                     #draw right attack animation
-                    window.win.blit(pygame.transform.scale(pygame.transform.flip(image.slimeAttack[self.attackCount//9], True, False), (self.width, self.height)), (self.x, self.y))
-                    self.attackCount += 3
+                    window.win.blit(pygame.transform.scale(pygame.transform.flip(image.slimeAttack[self.attackCount//18], True, False), (self.width, self.height)), (self.x, self.y))
+                    self.attackCount += 1
                 else:
                     pass
                     #draw right move animation
