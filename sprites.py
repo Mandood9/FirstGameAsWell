@@ -172,7 +172,7 @@ class character():
                     self.jumpCount += 3
             else:
                 window.win.blit(pygame.transform.scale(image.walkRight[self.moveCount//6], (self.width, self.height)), (self.x, self.y))
-                self.moveCount += 1
+                self.moveCount += 3
         elif self.left:
             if self.jump:
                 if self.airAttack:
@@ -183,7 +183,7 @@ class character():
                     self.jumpCount += 3
             else:
                 window.win.blit(pygame.transform.scale(pygame.transform.flip(image.walkRight[self.moveCount//6], True, False), (self.width, self.height)), (self.x, self.y))
-                self.moveCount += 1
+                self.moveCount += 3
         elif self.jump:
             if self.switch:
                 if self.airAttack:
